@@ -1,0 +1,74 @@
+    const history = useHistory();
+    const [deckListing, setdeckListing] = useState([]); /* Set state to blank array*/
+
+    useEffect(() => {
+      async function fetchList(){
+        const findDeck = await listDecks(); /* data already fetched from api*/
+        setdeckListing(findDeck); /* update blank array of deck to deck data fetched from api*/
+  
+      }
+      fetchList()
+    }, [])
+  
+   /* console.log(deckListing);*/
+
+  async function handleDelete(deck) {
+
+    if (window.confirm(`Delete this deck? You will not be able to recover it`))
+        {
+             await deleteDeck(deck.id);
+            //setdeckListing((deckToDelete) => 
+            //deckToDelete.filter((post) => post.id !== deck.id)
+            //)
+        } 
+        else {
+            history.push("/");
+          }
+
+
+        }
+
+function DeckMap(){
+  return (deckListing.map((currentDeck, index) => {
+            return (
+                <div>
+                <>
+                <table>
+                    <thead>
+                            <tr key={index}>
+                                <th key={currentDeck.id}>{currentDeck.name}</th>
+                                <th key={currentDeck.cards.id}>{`${currentDeck.cards.length}`}</th>
+                            </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                            {`${currentDeck.description}`}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <Link to={`/decks/${currentDeck.id}`}> View</Link>
+                            </td>
+                            <td>
+                                <Link to={`/decks/${currentDeck.id}/study`}>Study</Link>
+                            </td>
+                            <td>
+                                <button onClick={() => handleDelete(currentDeck)}>Delete</button>
+                                
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                </>
+            </div>
+        
+          )
+        
+   })
+   )}
+
+   
+
+    
+     
